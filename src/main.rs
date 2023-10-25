@@ -1,4 +1,5 @@
 mod commands;
+mod utils;
 mod bot;
 
 use anyhow::anyhow;
