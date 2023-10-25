@@ -1,3 +1,4 @@
+mod commands;
 mod bot;
 
 use anyhow::anyhow;
