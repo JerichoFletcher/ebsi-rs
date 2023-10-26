@@ -1,3 +1,4 @@
+mod model;
 mod commands;
 mod utils;
 mod bot;

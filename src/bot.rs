@@ -5,23 +5,23 @@ use serenity::model::prelude::*;
 use serenity::model::gateway::Ready;
 use tracing::{error, info};
 
-use crate::commands;
+use crate::{commands::ping::PingCommand, model::command::CommandTrait};
 
-static mut START_TIMESTAMP: Option<Timestamp> = Option::None;
-static mut SELF_USER: Option<CurrentUser> = Option::None;
+static mut START_TIMESTAMP: Option<Timestamp> = None;
+static mut USER_AVATAR_URL: Option<String> = None;
 
 pub struct Bot;
 
 impl Bot {
-    pub fn start_timestamp() -> Option<Timestamp> {
+    pub fn start_timestamp() -> Timestamp {
         unsafe {
-            START_TIMESTAMP
+            START_TIMESTAMP.unwrap_or(Timestamp::now())
         }
     }
 
-    pub fn self_user() -> &'static Option<CurrentUser> {
+    pub fn user_avatar_url() -> &'static str {
         unsafe {
-            &SELF_USER
+            USER_AVATAR_URL.as_ref().unwrap().as_str()
         }
     }
 }
@@ -33,10 +33,7 @@ impl EventHandler for Bot {
             if let Err(e) = command
                 .create_interaction_response(&ctx.http, |response| {
                     match command.data.name.as_str() {
-                        "ping" => {
-                            commands::ping::run(&command.data.options, response);
-                            response
-                        },
+                        "ping" => { PingCommand::run(&command.data.options, response); response },
                         _ => response
                             .kind(InteractionResponseType::ChannelMessageWithSource)
                             .interaction_response_data(|message| message.content("Oh no"))
@@ -52,14 +49,19 @@ impl EventHandler for Bot {
 
         // Set static variables
         unsafe {
-            START_TIMESTAMP = Option::Some(Timestamp::now());
-            SELF_USER = Option::Some(ready.user);
+            START_TIMESTAMP = Some(Timestamp::now());
+            match ready.user.avatar_url() {
+                Some(url) => {
+                    USER_AVATAR_URL = Some(url);
+                },
+                None => ()
+            }
         }
 
         // Register commands
         match Command::set_global_application_commands(&ctx.http, |commands| {
             commands
-                .create_application_command(|command| commands::ping::register(command))
+                .create_application_command(|command| PingCommand::reg(command))
         }).await {
             Ok(commands) => {
                 let commands: Vec<&String> = commands.iter().map(|command| &command.name).collect();
