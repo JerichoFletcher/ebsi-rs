@@ -2,12 +2,10 @@ use std::time::Duration;
 
 use serenity::model::Timestamp;
 
-// const MONTHS: [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
 pub fn timestamp_to_string(t: &Timestamp) -> String {
     let date = t.date();
     let time = t.time();
-    format!("{}:{}:{} {} {} {}", time.hour(), time.minute(), time.second(), date.day(), date.month(), date.year())
+    format!("{} {} {}, {:0>2}:{:0>2}:{:0>2} (GMT)", time.hour(), time.minute(), time.second(), date.day(), date.month(), date.year())
 }
 
 pub fn duration_to_string(d: &Duration) -> String {
