@@ -9,3 +9,9 @@ pub fn template_ok(e: &mut CreateEmbed, title: &str) {
         .color(Color::DARK_GREEN)
         .timestamp(Timestamp::now());
 }
+
+// pub fn template_err(e: &mut CreateEmbed, title: &str) {
+//     template_ok(e, title);
+//     e
+//         .color(Color::RED);
+// }

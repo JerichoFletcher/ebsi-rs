@@ -3,7 +3,14 @@ name = "ebsi-rs"
 version = "0.1.0"
 edition = "2021"
 
+[workspace]
+members = [
+    "crates/dice"
+]
+
 [dependencies]
+dice = { path = "crates/dice" }
+
 anyhow = "1.0.66"
 shuttle-serenity = "0.30.0"
 shuttle-runtime = "0.30.0"
