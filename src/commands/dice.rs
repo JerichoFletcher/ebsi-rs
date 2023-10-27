@@ -9,9 +9,9 @@ use serenity::model::prelude::{
 use crate::model::command::CommandTrait;
 use crate::utils::embed;
 
-pub struct PingCommand;
+pub struct DiceCommand;
 
-impl CommandTrait for PingCommand {
+impl CommandTrait for DiceCommand {
     fn reg(command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand {
         command
             .name("dadu")

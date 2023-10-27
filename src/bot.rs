@@ -5,7 +5,7 @@ use serenity::model::prelude::*;
 use serenity::model::gateway::Ready;
 use tracing::{error, info};
 
-use crate::{commands::ping::PingCommand, model::command::CommandTrait};
+use crate::{commands::{ping::PingCommand, dice::DiceCommand}, model::command::CommandTrait};
 
 static mut START_TIMESTAMP: Option<Timestamp> = None;
 static mut USER_AVATAR_URL: Option<String> = None;
@@ -34,6 +34,7 @@ impl EventHandler for Bot {
                 .create_interaction_response(&ctx.http, |response| {
                     match command.data.name.as_str() {
                         "ping" => { PingCommand::run(&command.data.options, response); response },
+                        "dadu" => { DiceCommand::run(&command.data.options, response); response },
                         _ => response
                             .kind(InteractionResponseType::ChannelMessageWithSource)
                             .interaction_response_data(|message| message.content("Oh no"))
@@ -62,6 +63,7 @@ impl EventHandler for Bot {
         match Command::set_global_application_commands(&ctx.http, |commands| {
             commands
                 .create_application_command(|command| PingCommand::reg(command))
+                .create_application_command(|command| DiceCommand::reg(command))
         }).await {
             Ok(commands) => {
                 let commands: Vec<&String> = commands.iter().map(|command| &command.name).collect();

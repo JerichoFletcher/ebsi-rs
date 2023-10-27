@@ -5,7 +5,7 @@ use serenity::model::Timestamp;
 pub fn timestamp_to_string(t: &Timestamp) -> String {
     let date = t.date();
     let time = t.time();
-    format!("{} {} {}, {:0>2}:{:0>2}:{:0>2} (GMT)", time.hour(), time.minute(), time.second(), date.day(), date.month(), date.year())
+    format!("{:0>2}:{:0>2}:{:0>2}, {} {} {} (GMT)", time.hour(), time.minute(), time.second(), date.day(), date.month(), date.year())
 }
 
 pub fn duration_to_string(d: &Duration) -> String {
