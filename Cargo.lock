@@ -398,6 +398,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "dice"
+version = "0.1.0"
+dependencies = [
+ "rand",
+]
+
+[[package]]
 name = "digest"
 version = "0.10.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -424,6 +431,7 @@ name = "ebsi-rs"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "dice",
  "serenity",
  "shuttle-runtime",
  "shuttle-secrets",
