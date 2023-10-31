@@ -2,10 +2,10 @@ use serenity::{builder::CreateEmbed, model::Timestamp, utils::Color};
 
 use crate::bot::Bot;
 
-pub fn template_ok(e: &mut CreateEmbed, title: &str) {
+pub fn template_ok(e: &mut CreateEmbed, bot: &Bot, title: &str) {
     e
         .title(title)
-        .thumbnail(Bot::user_avatar_url())
+        .thumbnail(bot.user_avatar_url().unwrap().as_str())
         .color(Color::DARK_GREEN)
         .timestamp(Timestamp::now());
 }
