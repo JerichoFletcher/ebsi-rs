@@ -20,20 +20,20 @@ impl CommandTrait for DiceCommand {
 
     fn run(&self, bot: &Bot, options: &[CommandDataOption], response: &mut CreateInteractionResponse) {
         if let CommandDataOptionValue::Integer(n) = options
-        .get(0).expect("No dice <n> option").resolved.as_ref().expect("No dice <n> value") {
-            let roll = dice::roll(n.unsigned_abs());
-            
-            response
-            .kind(InteractionResponseType::ChannelMessageWithSource)
-            .interaction_response_data(|message| message
-                .embed(|e| {
-                    embed::template_ok(e, bot, "Dadu!");
-                    e
-                    .description("Nilai dadu kamu adalah:")
-                    .field(format!(":game_die: {roll}"), "\u{200E}", false)
-                })
-            );
-        }
+            .get(0).expect("No dice <n> option").resolved.as_ref().expect("No dice <n> value") {
+                let roll = dice::roll(n.unsigned_abs());
+
+                response
+                .kind(InteractionResponseType::ChannelMessageWithSource)
+                .interaction_response_data(|message| message
+                    .embed(|e| {
+                        embed::template_ok(e, bot, "Dadu!");
+                        e
+                        .description(format!("Melempar D-{n}! Hasilnya adalah:"))
+                        .field(format!(":game_die: {roll}"), "\u{200E}", false)
+                    })
+                );
+            }
     }
     
     fn reg<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand {
