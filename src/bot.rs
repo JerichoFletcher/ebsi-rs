@@ -7,12 +7,17 @@ use serenity::model::prelude::*;
 use serenity::model::gateway::Ready;
 use tracing::{error, info};
 
-use crate::{commands::{ping::PingCommand, dice::DiceCommand}, model::command::CommandTrait};
+use crate::{model::command::CommandTrait, commands::{
+    ping::PingCommand,
+    dice::DiceCommand,
+    help::HelpCommand
+}};
 
 pub struct Bot {
     start_timestamp: Mutex<Option<Timestamp>>,
     user_avatar_url: Mutex<Option<String>>,
-    command_map: Mutex<BTreeMap<String, Box<dyn CommandTrait>>>
+    pub handler_map: Mutex<BTreeMap<String, Box<dyn CommandTrait>>>,
+    pub cmdinfo_map: Mutex<BTreeMap<String, Command>>,
 }
 
 impl Bot {
@@ -20,7 +25,8 @@ impl Bot {
         Self {
             start_timestamp: Mutex::new(None),
             user_avatar_url: Mutex::new(None),
-            command_map: Mutex::new(BTreeMap::new())
+            handler_map: Mutex::new(BTreeMap::new()),
+            cmdinfo_map: Mutex::new(BTreeMap::new()),
         }
     }
 
@@ -39,7 +45,7 @@ impl EventHandler for Bot {
         if let Interaction::ApplicationCommand(command) = interaction {
             if let Err(e) = command
                 .create_interaction_response(&ctx.http, |response| {
-                    match self.command_map.lock().unwrap().get(command.data.name.as_str()) {
+                    match self.handler_map.lock().unwrap().get(command.data.name.as_str()) {
                         Some(cmd) => {
                             cmd.run(self, &command.data.options, response);
                             response
@@ -65,10 +71,11 @@ impl EventHandler for Bot {
 
         // Register commands
         match Command::set_global_application_commands(&ctx.http, |commands| {
-            let mut map = self.command_map.lock().unwrap();
-            let cmd_list: [Box<dyn CommandTrait>; 2] = [
+            let mut map = self.handler_map.lock().unwrap();
+            let cmd_list: [Box<dyn CommandTrait>; 3] = [
+                Box::new(HelpCommand),
                 Box::new(PingCommand),
-                Box::new(DiceCommand)
+                Box::new(DiceCommand),
             ];
 
             for cmd in cmd_list {
@@ -83,8 +90,12 @@ impl EventHandler for Bot {
             commands
         }).await {
             Ok(commands) => {
-                let commands: Vec<&String> = commands.iter().map(|command| &command.name).collect();
-                info!("Registered commands: {:#?}", commands);
+                let mut map = self.cmdinfo_map.lock().unwrap();
+
+                for cmd in commands {
+                    info!("Registered command: {}", cmd.name);
+                    map.insert(cmd.name.clone(), cmd);
+                }
             },
             Err(e) => error!("Failed to register commands: {e}")
         }

@@ -10,8 +10,8 @@ pub fn template_ok(e: &mut CreateEmbed, bot: &Bot, title: &str) {
         .timestamp(Timestamp::now());
 }
 
-// pub fn template_err(e: &mut CreateEmbed, title: &str) {
-//     template_ok(e, title);
-//     e
-//         .color(Color::RED);
-// }
+pub fn template_err(e: &mut CreateEmbed, bot: &Bot, title: &str) {
+    template_ok(e, bot, title);
+    e
+        .color(Color::RED);
+}

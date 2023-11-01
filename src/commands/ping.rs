@@ -29,10 +29,10 @@ impl CommandTrait for PingCommand {
                     
                     embed::template_ok(e, bot, "Apaan sih?");
                     e
-                    .description("Brisik tau ga")
-                    .field("Online sejak", time_format::timestamp_to_string(&time), true)
-                    .field("\u{200E}", "\u{200E}", true)
-                    .field("Online selama", time_format::duration_to_string(&dif), true)
+                        .description("Brisik tau ga")
+                        .field("Online sejak", time_format::timestamp_to_string(&time), true)
+                        .field("\u{200E}", "\u{200E}", true)
+                        .field("Online selama", time_format::duration_to_string(&dif), true)
                 })
             );
     }

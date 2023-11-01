@@ -24,15 +24,15 @@ impl CommandTrait for DiceCommand {
                 let roll = dice::roll(n.unsigned_abs());
 
                 response
-                .kind(InteractionResponseType::ChannelMessageWithSource)
-                .interaction_response_data(|message| message
-                    .embed(|e| {
-                        embed::template_ok(e, bot, "Dadu!");
-                        e
-                        .description(format!("Melempar D-{n}! Hasilnya adalah:"))
-                        .field(format!(":game_die: {roll}"), "\u{200E}", false)
-                    })
-                );
+                    .kind(InteractionResponseType::ChannelMessageWithSource)
+                    .interaction_response_data(|message| message
+                        .embed(|e| {
+                            embed::template_ok(e, bot, "Dadu!");
+                            e
+                                .description(format!("Melempar D-{n}! Hasilnya adalah:"))
+                                .field(format!(":game_die: {roll}"), "\u{200E}", false)
+                        })
+                    );
             }
     }
     
