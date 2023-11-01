@@ -25,7 +25,7 @@ async fn serenity(
         GatewayIntents::GUILD_EMOJIS_AND_STICKERS;
 
     let client = Client::builder(&token, intents)
-        .event_handler(bot::Bot)
+        .event_handler(bot::Bot::new())
         .await
         .expect("Err creating client");
 

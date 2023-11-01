@@ -1,6 +1,9 @@
 use serenity::{model::prelude::application_command::CommandDataOption, builder::{CreateInteractionResponse, CreateApplicationCommand}};
 
-pub trait CommandTrait {
-    fn reg(command: &mut CreateApplicationCommand) -> &mut CreateApplicationCommand;
-    fn run(options: &[CommandDataOption], response: &mut CreateInteractionResponse);
+use crate::bot::Bot;
+
+pub trait CommandTrait: Send + Sync {
+    fn name(&self) -> &str;
+    fn run(&self, bot: &Bot, options: &[CommandDataOption], response: &mut CreateInteractionResponse);
+    fn reg<'a>(&self, command: &'a mut CreateApplicationCommand) -> &'a mut CreateApplicationCommand;
 }
